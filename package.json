@@ -1,0 +1,27 @@
+{
+  "name": "moneyglass-expense-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Self-hosted private expense tracker with encrypted records, statement imports and local insights.",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "secrets": "node scripts/generate-secrets.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20.12"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "csv-parse": "^5.6.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "multer": "^2.0.0",
+    "pdf-parse": "^1.1.1",
+    "exceljs": "^4.4.0"
+  }
+}

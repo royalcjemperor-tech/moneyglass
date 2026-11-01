@@ -1,0 +1,57 @@
+services:
+  app:
+    build: .
+    container_name: moneyglass-app
+    restart: unless-stopped
+    init: true
+
+    env_file:
+      - .env
+
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATA_DIR: /app/data
+      TZ: Asia/Kolkata
+
+    volumes:
+      - moneyglass_data:/app/data
+
+    security_opt:
+      - no-new-privileges:true
+
+    cap_drop:
+      - ALL
+
+    read_only: true
+
+    tmpfs:
+      - /tmp:size=32m,noexec,nosuid
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    networks:
+      - moneyglass
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: moneyglass-tunnel
+    restart: unless-stopped
+    profiles:
+      - public
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      - app
+    networks:
+      - moneyglass
+
+volumes:
+  moneyglass_data:
+    name: moneyglass_data
+
+networks:
+  moneyglass:
+    driver: bridge
